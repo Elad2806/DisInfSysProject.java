@@ -1,5 +1,3 @@
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.*;
 import java.io.*;
 public class ExManager {
@@ -62,10 +60,32 @@ public class ExManager {
         }
 
     }
+    public void terminate(){
 
+    }
     public void start(){
-        for (Node node: nodes){
+
+        Thread[] threads = new Thread[num_of_nodes];
+        for (Node node : nodes) {
+
+            Thread thread = new Thread(() -> {
+                try{
+                    node.start();
+                } catch (IOException e) {
+                e.printStackTrace();
+                }
+            });
+            threads[node.id-1] = thread;
+            thread.start();
+        }
+        // wait for all nodes to finish execution (when it received a message from every other node)
+        for (Thread thread : threads) {
+            try{
+                thread.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         }
-    }
 }
