@@ -2,6 +2,8 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+
+
 public class Node extends Thread{
 
     private Integer num_of_nodes;
@@ -138,8 +140,16 @@ public class Node extends Thread{
         }
         for (String s: msg.split("@")) {
             String[] parts = s.split("/");
-            Integer source = Integer.parseInt(parts[0]);
-            String org_msg = parts[1];
+            Integer source = 0;
+            String org_msg ="";
+            try {
+                source = Integer.parseInt(parts[0]);
+                org_msg = parts[1];
+            }
+            catch(Exception e){
+                System.out.println("bad message arrived");
+                System.out.println(msg);
+            }
             //System.out.println(this.id + "-" + s + " and sending it to " + this.neighbors.keySet());
             if (!this.msgs.containsKey(source)) {
                 this.msgs.put(source, org_msg);
