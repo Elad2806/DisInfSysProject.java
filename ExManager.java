@@ -1,9 +1,12 @@
 import java.util.*;
 import java.io.*;
+import java.util.*;
 public class ExManager {
     private String path;
     private Integer num_of_nodes;
     private List<Node> nodes;
+    // DELETE THIS
+    // public static int num_threads = 0;
 
 
     public ExManager(String path){
@@ -25,15 +28,20 @@ public class ExManager {
 
     public void update_edge(int id1, int id2, double weight){
         Node from = null;
-        Integer to = id2;
+        Node to = null;
         for (Node node : nodes) {
             if (node.id == id1) {
                 from = node;
             }
+            if (node.id == id2) {
+                to = node;
+            }
         }
         assert from != null;
         assert id1 != id2;
-        from.update_weight(to, weight);
+        assert to != null;
+        from.update_weight(to.id, weight);
+        to.update_weight(from.id, weight);
     }
 
     public void read_txt() throws FileNotFoundException{
@@ -55,37 +63,62 @@ public class ExManager {
             line_items = line.split(" ");
             System.out.println(line);
             Integer id = Integer.parseInt(line_items[0]);
-            Node node = new Node(line, this.num_of_nodes);
+            Node node = new Node(line, this.num_of_nodes, this);
             nodes.add(node);
+            //num_threads += node.get_num_neighs();
         }
+        //System.out.println(num_threads);
+        // DELETE THIS
 
+//        try {
+//            for (Node n : this.nodes){
+//                n.receiveMessages();
+//            }
+//        } catch (IOException e){
+//            e.printStackTrace();
+//        }
+//        try{
+//            for (Node n : this.nodes){
+//                n.send();
+//            }
+//        } catch (IOException e){
+//            e.printStackTrace();
+//        }
+//
+//        for (Node n : this.nodes){
+//            n.read_msgs();
+//        }
     }
-    public void terminate(){
 
-    }
-    public void start(){
-
-        Thread[] threads = new Thread[num_of_nodes];
-        for (Node node : nodes) {
-
-            Thread thread = new Thread(() -> {
-                try{
-                    node.start();
-                } catch (IOException e) {
-                e.printStackTrace();
-                }
-            });
-            threads[node.id-1] = thread;
-            thread.start();
-        }
-        // wait for all nodes to finish execution (when it received a message from every other node)
-        for (Thread thread : threads) {
-            try{
-                thread.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+    public void start() {
+        // your code here
+        for (Node node: this.nodes){
+            // wait until node is listening
+            while (!node.is_listening()){
             }
         }
-
+        for (Node node: this.nodes){
+            node.run();
         }
+
+        for (Node node: this.nodes){
+            while(node.num_msgs() != num_of_nodes){
+            }
+            System.out.println(node.id + "finished");
+        }
+        for (Node node: this.nodes){
+            //System.out.println(node.id + " is here");
+            node.killListeningSockets();
+            node.stop_receiving();
+        }
+        for (Node node: this.nodes){
+            try{node.join();}
+            catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+        for (Node node: this.nodes){
+            node.read_msgs();
+        }
+    }
 }

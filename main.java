@@ -2,13 +2,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-import java.util.*;
-import java.net.*;
-import java.io.*;
-
 public class main {
     public static void main(String[] args) throws FileNotFoundException {
-        String[] paths = {"input_test.txt"}; //enter the path to the files you want to run here.
+        String[] paths = {"input_1.txt"}; //enter the path to the files you want to run here.
         for(String path: paths) {
             ExManager m = new ExManager(path);
             m.read_txt();
@@ -22,7 +18,7 @@ public class main {
                     m.start();
                     Node n = m.getNode(1 + (int)(Math.random() * num_of_nodes));
                     n.print_graph();
-
+                    System.out.println();
                 }
 
                 if(line.contains("update")){
@@ -30,7 +26,6 @@ public class main {
                     m.update_edge(Integer.parseInt(data[1]), Integer.parseInt(data[2]), Double.parseDouble(data[3]));
                 }
             }
-            m.terminate();
         }
     }
 }
