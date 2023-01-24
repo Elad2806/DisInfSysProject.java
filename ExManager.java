@@ -15,8 +15,12 @@ public class ExManager {
         this.nodes = new ArrayList<Node>();
         this.iteration = 1;
     }
-
-    public Node getNode(int id) {
+    public void terminate(){
+        for (Node node:this.nodes){
+            node.interrupt();
+        }
+    }
+    public Node get_node(int id) {
         for (Node node : nodes) {
             if (node.id == id) {
                 return node;
@@ -101,13 +105,13 @@ public class ExManager {
             node.sendingSockets = new HashMap<>();
             ///System.out.println(node.stop_listening);
         }
-        if (this.iteration > 1){
-            for (Node node: this.nodes) {
-                node.receiveMessages();
-                //System.out.println(node.stop_listening);
-                //System.out.println(node.id);
-            }
+
+        for (Node node: this.nodes) {
+            node.receiveMessages();
+            //System.out.println(node.stop_listening);
+            //System.out.println(node.id);
         }
+
 
         for (Node node: this.nodes){
             // wait until node is listening

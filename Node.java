@@ -82,7 +82,7 @@ public class Node extends Thread{
         this.manager = m;
 
         parseLine(line);
-        receiveMessages();
+
     }
 
     public int get_num_neighs(){
@@ -251,7 +251,7 @@ public class Node extends Thread{
                         }
                     }
                     if (socket == null){
-                        System.out.println("Something fishy");
+                        //System.out.println("Something fishy");
                     }
                     socket.close();
                     serverSocket.close();
