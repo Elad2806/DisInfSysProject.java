@@ -6,16 +6,16 @@ import java.util.*;
 
 public class Node extends Thread{
 
-    private Integer num_of_nodes;
+    public Integer num_of_nodes;
     public Integer id;
-    private Map<Integer, Double> neighbors;
-    private Map<Integer, List<Integer>> ports;
+    public Map<Integer, Double> neighbors;
+    public Map<Integer, List<Integer>> ports;
     // ports is of the form (neighbor_id) -> (send_port, listen_port)
-    private Map<Integer, Integer> seqCounter;
-    private Map<Integer, String> msgs;
-    private Boolean stop_listening;
-    private Map<Integer, Socket> sendingSockets;
-    private List<Integer> curr_listening;
+    public Map<Integer, Integer> seqCounter;
+    public Map<Integer, String> msgs;
+    public Boolean stop_listening;
+    public Map<Integer, Socket> sendingSockets;
+    public List<Integer> curr_listening;
 
     public ExManager manager;
 
@@ -235,7 +235,7 @@ public class Node extends Thread{
                                 socket = serverSocket.accept();
                             }
                             InputStream in = socket.getInputStream();
-                            byte[] msg_bits = new byte[4096];
+                            byte[] msg_bits = new byte[20000];
                             in.read(msg_bits);
                             String msg = new String(msg_bits).trim();
                             if (!msg.equals("")) {
@@ -246,7 +246,7 @@ public class Node extends Thread{
                             }
 
                         } catch (SocketTimeoutException e){
-                            System.out.println("JERE");
+                            //System.out.println("JERE");
                             decrementListening(this.ports.get(neighbor).get(1));
                         }
                     }

@@ -5,6 +5,7 @@ public class ExManager {
     private String path;
     private Integer num_of_nodes;
     private List<Node> nodes;
+    private int iteration;
     // DELETE THIS
     // public static int num_threads = 0;
 
@@ -12,6 +13,7 @@ public class ExManager {
     public ExManager(String path){
         this.path = path;
         this.nodes = new ArrayList<Node>();
+        this.iteration = 1;
     }
 
     public Node getNode(int id) {
@@ -61,7 +63,7 @@ public class ExManager {
             }
 
             line_items = line.split(" ");
-            System.out.println(line);
+            //System.out.println(line);
             Integer id = Integer.parseInt(line_items[0]);
             Node node = new Node(line, this.num_of_nodes, this);
             nodes.add(node);
@@ -93,8 +95,25 @@ public class ExManager {
     public void start() {
         // your code here
         for (Node node: this.nodes){
+            node.msgs = new HashMap<>();;
+            node.stop_listening = false;
+            node.curr_listening = new ArrayList<>();
+            node.sendingSockets = new HashMap<>();
+            ///System.out.println(node.stop_listening);
+        }
+        if (this.iteration > 1){
+            for (Node node: this.nodes) {
+                node.receiveMessages();
+                //System.out.println(node.stop_listening);
+                //System.out.println(node.id);
+            }
+        }
+
+        for (Node node: this.nodes){
             // wait until node is listening
             while (!node.is_listening()){
+                System.out.print("");
+
             }
         }
         for (Node node: this.nodes){
@@ -103,8 +122,9 @@ public class ExManager {
 
         for (Node node: this.nodes){
             while(node.num_msgs() != num_of_nodes){
+                System.out.print("");
             }
-            System.out.println(node.id + "finished");
+            //System.out.println(node.id + "finished");
         }
         for (Node node: this.nodes){
             //System.out.println(node.id + " is here");
@@ -117,8 +137,6 @@ public class ExManager {
                 e.printStackTrace();
             }
         }
-        for (Node node: this.nodes){
-            node.read_msgs();
-        }
+    this.iteration += 1;
     }
 }
