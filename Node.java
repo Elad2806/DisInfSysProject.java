@@ -235,7 +235,7 @@ public class Node extends Thread{
                                 socket = serverSocket.accept();
                             }
                             InputStream in = socket.getInputStream();
-                            byte[] msg_bits = new byte[1024];
+                            byte[] msg_bits = new byte[4096];
                             in.read(msg_bits);
                             String msg = new String(msg_bits).trim();
                             if (!msg.equals("")) {
